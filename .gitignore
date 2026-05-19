@@ -1,0 +1,16 @@
+# Claude Code local settings
+.claude/
+
+# Agent skills (réinstallables via `npx skills add supabase/agent-skills`)
+.agents/
+
+# OS / éditeur
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Logs et temp
+*.log
+*.tmp
