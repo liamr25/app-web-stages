@@ -113,17 +113,23 @@ async function deleteStage(id) {
 }
 
 async function updateStage(id, updates) {
-    if (window.StorageAdapter) {
-        await window.StorageAdapter.updateStage(id, updates);
-    } else {
-        const stages = JSON.parse(localStorage.getItem('stages_data') || '[]');
-        const index = stages.findIndex(s => s.id === id);
-        if (index !== -1) {
-            stages[index] = { ...stages[index], ...updates };
-            localStorage.setItem('stages_data', JSON.stringify(stages));
+    try {
+        if (window.StorageAdapter) {
+            await window.StorageAdapter.updateStage(id, updates);
+        } else {
+            const stages = JSON.parse(localStorage.getItem('stages_data') || '[]');
+            const index = stages.findIndex(s => s.id === id);
+            if (index !== -1) {
+                stages[index] = { ...stages[index], ...updates };
+                localStorage.setItem('stages_data', JSON.stringify(stages));
+            }
         }
+        await renderStages();
+        showToast("✅ Stage mis à jour !", "success");
+    } catch (err) {
+        console.error(err);
+        showToast("❌ Erreur lors de la mise à jour", "error");
     }
-    await renderStages();
 }
 
 async function clearAllData() {
@@ -223,7 +229,7 @@ function escapeHtml(text) {
 function formatResponse(response) {
     const map = {
         'positif': '✓ Positif',
-        'négatif': '✗ Négatif',
+        'negatif': '✗ Négatif',
         'attente': '⏳ En attente'
     };
     return map[response] || response;
@@ -240,12 +246,17 @@ function showToast(message, type = 'success') {
         document.body.appendChild(container);
     }
 
+    const icons = { success: '✓', error: '✗', info: 'ℹ' };
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    toast.innerHTML = `
-        <div class="toast-icon">${type === 'success' ? '✓' : 'ℹ'}</div>
-        <div class="toast-message">${message}</div>
-    `;
+    const iconEl = document.createElement('div');
+    iconEl.className = 'toast-icon';
+    iconEl.textContent = icons[type] || icons.info;
+    const msgEl = document.createElement('div');
+    msgEl.className = 'toast-message';
+    msgEl.textContent = message;
+    toast.appendChild(iconEl);
+    toast.appendChild(msgEl);
 
     container.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
@@ -264,17 +275,18 @@ async function exportToCSV() {
         return;
     }
 
+    const csvCell = v => `"${String(v ?? '').replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
     const headers = ['ID', 'Etudiant', 'Classe', 'Entreprise', 'Contact', 'Telephone', 'Reponse', 'Date Contact', 'Notes'];
     const rows = stages.map(stage => [
         stage.id,
-        `"${stage.student}"`,
-        `"${stage.classroom}"`,
-        `"${stage.company}"`,
-        `"${stage.contact}"`,
-        `"${stage.phone}"`,
-        stage.response,
-        stage.contactDate,
-        `"${(stage.notes || '').replace(/\n/g, ' ')}"`
+        csvCell(stage.student),
+        csvCell(stage.classroom),
+        csvCell(stage.company),
+        csvCell(stage.contact),
+        csvCell(stage.phone),
+        csvCell(stage.response),
+        csvCell(stage.contactDate),
+        csvCell(stage.notes)
     ]);
 
     const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');

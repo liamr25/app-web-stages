@@ -285,24 +285,25 @@
                 const stage = allStages.find(s => s.id === parseInt(id));
                 if (stage) {
                     editingId = stage.id;
-                    document.getElementById('form-title').textContent = 'Modifier le stage de ' + escapeHtml(stage.student);
-                    document.getElementById('student').value = stage.student;
-                    document.getElementById('classroom').value = stage.classroom;
-                    document.getElementById('company').value = stage.company;
-                    document.getElementById('contact').value = stage.contact;
-                    document.getElementById('phone').value = stage.phone;
-                    document.getElementById('address').value = stage.address;
-                    document.getElementById('contact-person').value = stage.contactPerson;
-                    document.getElementById('contact-mode').value = stage.contactMode;
-                    document.getElementById('contact-date').value = stage.contactDate;
-                    document.getElementById('response').value = stage.response;
-                    document.getElementById('remind-date').value = stage.remindDate;
-                    document.getElementById('remind-mode').value = stage.remindMode;
-                    document.getElementById('notes').value = stage.notes;
-                    document.getElementById('conv-sent').checked = stage.convention.sent;
-                    document.getElementById('conv-signed-co').checked = stage.convention.signedByCo;
-                    document.getElementById('conv-signed-student').checked = stage.convention.signedByStudent;
-                    document.getElementById('conv-signed-establishment').checked = stage.convention.signedByEstablishment;
+                    const conv = stage.convention || {};
+                    document.getElementById('form-title').textContent = 'Modifier le stage de ' + (stage.student || '');
+                    document.getElementById('student').value = stage.student || '';
+                    document.getElementById('classroom').value = stage.classroom || '';
+                    document.getElementById('company').value = stage.company || '';
+                    document.getElementById('contact').value = stage.contact || '';
+                    document.getElementById('phone').value = stage.phone || '';
+                    document.getElementById('address').value = stage.address || '';
+                    document.getElementById('contact-person').value = stage.contactPerson || '';
+                    document.getElementById('contact-mode').value = stage.contactMode || 'email';
+                    document.getElementById('contact-date').value = stage.contactDate || '';
+                    document.getElementById('response').value = stage.response || 'attente';
+                    document.getElementById('remind-date').value = stage.remindDate || '';
+                    document.getElementById('remind-mode').value = stage.remindMode || '';
+                    document.getElementById('notes').value = stage.notes || '';
+                    document.getElementById('conv-sent').checked = !!conv.sent;
+                    document.getElementById('conv-signed-co').checked = !!conv.signedByCo;
+                    document.getElementById('conv-signed-student').checked = !!conv.signedByStudent;
+                    document.getElementById('conv-signed-establishment').checked = !!conv.signedByEstablishment;
                 }
             }
         }
@@ -311,25 +312,25 @@
             e.preventDefault();
 
             const stageData = {
-                student_name: document.getElementById('student').value,
+                student: document.getElementById('student').value,
                 classroom: document.getElementById('classroom').value,
-                company_name: document.getElementById('company').value,
-                email: document.getElementById('contact').value,
+                company: document.getElementById('company').value,
+                contact: document.getElementById('contact').value,
                 phone: document.getElementById('phone').value,
                 address: document.getElementById('address').value,
-                contact_person: document.getElementById('contact-person').value,
-                contact_mode: document.getElementById('contact-mode').value,
-                contact_date: document.getElementById('contact-date').value || null,
-                status: document.getElementById('response').value,
-                reminder_date: document.getElementById('remind-date').value || null,
-                reminder_mode: document.getElementById('remind-mode').value || null,
+                contactPerson: document.getElementById('contact-person').value,
+                contactMode: document.getElementById('contact-mode').value,
+                contactDate: document.getElementById('contact-date').value || '',
+                response: document.getElementById('response').value,
+                remindDate: document.getElementById('remind-date').value || '',
+                remindMode: document.getElementById('remind-mode').value || '',
                 notes: document.getElementById('notes').value,
-
-                // ✅ IMPORTANT : plus d’objet
-                convention_sent: document.getElementById('conv-sent').checked,
-                signed_by_company: document.getElementById('conv-signed-co').checked,
-                signed_by_student: document.getElementById('conv-signed-student').checked,
-                signed_by_school: document.getElementById('conv-signed-establishment').checked
+                convention: {
+                    sent: document.getElementById('conv-sent').checked,
+                    signedByCo: document.getElementById('conv-signed-co').checked,
+                    signedByStudent: document.getElementById('conv-signed-student').checked,
+                    signedByEstablishment: document.getElementById('conv-signed-establishment').checked
+                }
             };
 
 
@@ -339,7 +340,6 @@
                 await addStage(stageData);
             }
 
-            showToast('Stage enregistré avec succès !', 'success');
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 1500);

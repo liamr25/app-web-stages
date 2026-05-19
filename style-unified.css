@@ -550,7 +550,7 @@ select:focus {
     border: 1px solid rgba(45, 134, 89, 0.3);
 }
 
-.badge-négatif {
+.badge-negatif {
     background: rgba(168, 42, 42, 0.15);
     color: #a82a2a;
     border: 1px solid rgba(168, 42, 42, 0.3);
