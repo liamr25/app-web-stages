@@ -381,7 +381,7 @@
 
         // Surcharge deleteStage pour rafraîchir les stats
         const _origDelete = window.deleteStage;
-        window.deleteStage = async function(id) {
+        window.deleteStage = async function (id) {
             await _origDelete(id);
             await renderStats();
         };

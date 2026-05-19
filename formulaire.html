@@ -311,26 +311,27 @@
             e.preventDefault();
 
             const stageData = {
-                student: document.getElementById('student').value,
+                student_name: document.getElementById('student').value,
                 classroom: document.getElementById('classroom').value,
-                company: document.getElementById('company').value,
-                contact: document.getElementById('contact').value,
+                company_name: document.getElementById('company').value,
+                email: document.getElementById('contact').value,
                 phone: document.getElementById('phone').value,
                 address: document.getElementById('address').value,
-                contactPerson: document.getElementById('contact-person').value,
-                contactMode: document.getElementById('contact-mode').value,
-                contactDate: document.getElementById('contact-date').value,
-                response: document.getElementById('response').value,
-                remindDate: document.getElementById('remind-date').value,
-                remindMode: document.getElementById('remind-mode').value,
+                contact_person: document.getElementById('contact-person').value,
+                contact_mode: document.getElementById('contact-mode').value,
+                contact_date: document.getElementById('contact-date').value || null,
+                status: document.getElementById('response').value,
+                reminder_date: document.getElementById('remind-date').value || null,
+                reminder_mode: document.getElementById('remind-mode').value || null,
                 notes: document.getElementById('notes').value,
-                convention: {
-                    sent: document.getElementById('conv-sent').checked,
-                    signedByCo: document.getElementById('conv-signed-co').checked,
-                    signedByStudent: document.getElementById('conv-signed-student').checked,
-                    signedByEstablishment: document.getElementById('conv-signed-establishment').checked
-                }
+
+                // ✅ IMPORTANT : plus d’objet
+                convention_sent: document.getElementById('conv-sent').checked,
+                signed_by_company: document.getElementById('conv-signed-co').checked,
+                signed_by_student: document.getElementById('conv-signed-student').checked,
+                signed_by_school: document.getElementById('conv-signed-establishment').checked
             };
+
 
             if (editingId) {
                 await updateStage(editingId, stageData);
