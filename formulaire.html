@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulaire pour ajouter ou modifier un stage.">
+    <meta name="theme-color" content="#0f0f1e">
+    <title>Ajouter / Modifier un stage</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>✨</text></svg>">
+    <link rel="stylesheet" href="style-unified.css">
+</head>
+
+<body>
+    <!-- SVG sprite for SF Symbols reused from index -->
+    <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="sf-home" viewBox="0 0 24 24">
+            <path d="M3 9.5l9-7 9 7V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" />
+        </symbol>
+        <symbol id="sf-plus" viewBox="0 0 24 24">
+            <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" />
+        </symbol>
+        <symbol id="sf-doc" viewBox="0 0 24 24">
+            <path d="M6 2h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" />
+            <path d="M14 2v6h6" />
+        </symbol>
+        <symbol id="sf-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" />
+            <path
+                d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95-6.95l-1.414 1.414M6.464 17.536l-1.414 1.414M17.536 17.536l1.414 1.414M6.464 6.464L5.05 5.05" />
+        </symbol>
+        <symbol id="sf-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </symbol>
+    </svg>
+    <!-- Accessibility skip link -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+    <!-- NoScript fallback -->
+    <noscript>
+        <div class="noscript-banner">
+            <p>JavaScript est requis pour que cette application fonctionne. Veuillez l'activer.</p>
+        </div>
+    </noscript>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="site-header">
+        <div class="header-inner neon-primary">
+            <div class="header-branding">
+                <h1 class="site-title">
+                    <svg class="icon-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    Gestion des Stages
+                </h1>
+                <p class="header-tagline">Suivi professionnel de vos stages en un seul endroit</p>
+            </div>
+
+            <nav class="site-nav" aria-label="Navigation principale">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Activer thème clair" onclick="toggleTheme()">
+                    <svg class="icon" width="20" height="20">
+                        <use xlink:href="#sf-moon" />
+                    </svg>
+                </button>
+                <button class="nav-toggle" aria-label="Basculer le menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-home" />
+                            </svg>
+                            Accueil
+                        </a></li>
+                    <li><a href="formulaire.html" class="nav-link active" aria-current="page">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-plus" />
+                            </svg>
+                            Ajouter un stage
+                        </a></li>
+                    <li><a href="conventions.html" class="nav-link">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-doc" />
+                            </svg>
+                            Conventions
+                        </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="main-container">
+
+        <div class="form-header glass-box glass-lg neon-primary">
+            <h2 id="form-title">Ajouter un nouveau stage</h2>
+            <p>Remplissez tous les champs pour créer un nouveau suivi de stage ou modifiez les informations existantes.
+            </p>
+        </div>
+
+        <form id="stage-form" class="form-wrapper">
+            <!-- SECTION: INFORMATIONS ÉTUDIANT -->
+            <section class="form-card neon-primary">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                    Informations étudiant
+                </h3>
+                <div class="form-grid form-2col">
+                    <div class="form-group">
+                        <label for="student">Étudiant (nom complet)</label>
+                        <input type="text" id="student" placeholder="Prénom Nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="classroom">Classe / Promotion</label>
+                        <input type="text" id="classroom" placeholder="Exemple : SIO1 - 2026" required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: INFORMATIONS ENTREPRISE -->
+            <section class="form-card neon-primary">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 7V3H2v18h20V7h-10zm0 6h-4v-2h4v2zm6-6h-4v2h4V7zm0 6h-4v2h4v-2zm0 6h-10v-2h10v2z" />
+                    </svg>
+                    Informations entreprise
+                </h3>
+                <div class="form-grid form-1col">
+                    <div class="form-group">
+                        <label for="company">Nom de l'entreprise *</label>
+                        <input type="text" id="company" placeholder="Exemple : TechCorp" required>
+                    </div>
+                </div>
+                <div class="form-grid form-2col">
+                    <div class="form-group">
+                        <label for="contact">Email / Site</label>
+                        <input type="email" id="contact" placeholder="contact@ex.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" placeholder="01 23 45 67 89">
+                    </div>
+                </div>
+                <div class="form-grid form-1col">
+                    <div class="form-group">
+                        <label for="address">Adresse</label>
+                        <input type="text" id="address" placeholder="123 Rue de la Paix, 75000 Paris">
+                    </div>
+                </div>
+                <div class="form-grid form-1col">
+                    <div class="form-group">
+                        <label for="contact-person">Personne de contact</label>
+                        <input type="text" id="contact-person" placeholder="Nom et fonction (ex : Mme Dupont - RH)">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: SUIVI DU CONTACT -->
+            <section class="form-card neon-primary">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 2.97c-2.57-1.31-5.01-3.75-6.32-6.32l2.98-1.57c.27-.27.36-.66.24-1.01-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" />
+                    </svg>
+                    Suivi du contact
+                </h3>
+                <div class="form-grid form-3col">
+                    <div class="form-group">
+                        <label for="contact-mode">Mode de contact</label>
+                        <select id="contact-mode">
+                            <option value="email">Email</option>
+                            <option value="telephone">Téléphone</option>
+                            <option value="visite">Visite</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-date">Date du contact</label>
+                        <input type="date" id="contact-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="response">Réponse</label>
+                        <select id="response">
+                            <option value="attente">En attente</option>
+                            <option value="positif">Positif</option>
+                            <option value="negatif">Négatif</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-grid form-3col">
+                    <div class="form-group">
+                        <label for="remind-date">Date de relance</label>
+                        <input type="date" id="remind-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="remind-mode">Mode de relance</label>
+                        <select id="remind-mode">
+                            <option value="email">Email</option>
+                            <option value="telephone">Téléphone</option>
+                            <option value="sms">SMS</option>
+                            <option value="visite">Visite</option>
+                            <option value="">Aucun</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Observations / Commentaires</label>
+                        <textarea id="notes" placeholder="Notes additionnelles sur le contact..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: CONVENTION DE STAGE -->
+            <section class="form-card neon-primary">
+                <h3>
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z" />
+                    </svg>
+                    Convention de stage
+                </h3>
+                <div class="form-checkboxes">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="conv-sent">
+                        <span>Convention initiale envoyée</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="conv-signed-co">
+                        <span>Convention signée par l'entreprise et le tuteur</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="conv-signed-student">
+                        <span>Convention signée par l'étudiant et le professeur référent</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="conv-signed-establishment">
+                        <span>Convention signée par l'établissement et renvoyée à l'entreprise</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- FORM ACTIONS -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary neon-primary">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
+                    </svg>
+                    Enregistrer le stage
+                </button>
+                <a href="index.html" class="btn neon-primary">Annuler</a>
+            </div>
+        </form>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer neon-primary">
+        <div class="footer-content">
+            <p>&copy; 2026 Gestion des Stages • <span class="version">v2.0</span></p>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- APPLICATION SCRIPTS -->
+    <script src="supabase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+    <script src="supabase-client.js"></script>
+    <script src="storage-adapter.js"></script>
+    <script src="app.js"></script>
+    <script>
+        let editingId = null;
+
+        async function loadStageData() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (id) {
+                const allStages = await getAllStages();
+                const stage = allStages.find(s => s.id === parseInt(id));
+                if (stage) {
+                    editingId = stage.id;
+                    document.getElementById('form-title').textContent = 'Modifier le stage de ' + escapeHtml(stage.student);
+                    document.getElementById('student').value = stage.student;
+                    document.getElementById('classroom').value = stage.classroom;
+                    document.getElementById('company').value = stage.company;
+                    document.getElementById('contact').value = stage.contact;
+                    document.getElementById('phone').value = stage.phone;
+                    document.getElementById('address').value = stage.address;
+                    document.getElementById('contact-person').value = stage.contactPerson;
+                    document.getElementById('contact-mode').value = stage.contactMode;
+                    document.getElementById('contact-date').value = stage.contactDate;
+                    document.getElementById('response').value = stage.response;
+                    document.getElementById('remind-date').value = stage.remindDate;
+                    document.getElementById('remind-mode').value = stage.remindMode;
+                    document.getElementById('notes').value = stage.notes;
+                    document.getElementById('conv-sent').checked = stage.convention.sent;
+                    document.getElementById('conv-signed-co').checked = stage.convention.signedByCo;
+                    document.getElementById('conv-signed-student').checked = stage.convention.signedByStudent;
+                    document.getElementById('conv-signed-establishment').checked = stage.convention.signedByEstablishment;
+                }
+            }
+        }
+
+        document.getElementById('stage-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const stageData = {
+                student: document.getElementById('student').value,
+                classroom: document.getElementById('classroom').value,
+                company: document.getElementById('company').value,
+                contact: document.getElementById('contact').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                contactPerson: document.getElementById('contact-person').value,
+                contactMode: document.getElementById('contact-mode').value,
+                contactDate: document.getElementById('contact-date').value,
+                response: document.getElementById('response').value,
+                remindDate: document.getElementById('remind-date').value,
+                remindMode: document.getElementById('remind-mode').value,
+                notes: document.getElementById('notes').value,
+                convention: {
+                    sent: document.getElementById('conv-sent').checked,
+                    signedByCo: document.getElementById('conv-signed-co').checked,
+                    signedByStudent: document.getElementById('conv-signed-student').checked,
+                    signedByEstablishment: document.getElementById('conv-signed-establishment').checked
+                }
+            };
+
+            if (editingId) {
+                await updateStage(editingId, stageData);
+            } else {
+                await addStage(stageData);
+            }
+
+            showToast('Stage enregistré avec succès !', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadStageData();
+            setActiveNav();
+        });
+    </script>
+</body>
+
+</html>

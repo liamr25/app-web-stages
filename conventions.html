@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Suivi détaillé de l'état des conventions de stage.">
+    <meta name="theme-color" content="#0f0f1e">
+    <title>Suivi des Conventions</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>✨</text></svg>">
+    <link rel="stylesheet" href="style-unified.css">
+    <style>
+        /* Convention-specific styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-xl);
+            margin-bottom: var(--space-2xl);
+        }
+
+        .stat-card {
+            background: var(--glass-1);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            backdrop-filter: var(--blur-md);
+            -webkit-backdrop-filter: var(--blur-md);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+        .stat-card:hover {
+            border-color: var(--glass-border-hover);
+            background: var(--glass-2);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            position: relative;
+            z-index: 1;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 0 var(--space-sm);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            position: relative;
+            z-index: 1;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .conventions-grid {
+            display: grid;
+            gap: var(--space-xl);
+        }
+
+        .convention-card {
+            background: var(--glass-1);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            backdrop-filter: var(--blur-md);
+            -webkit-backdrop-filter: var(--blur-md);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .convention-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+        }
+
+        .convention-card:hover {
+            border-color: var(--glass-border-hover);
+            background: var(--glass-2);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .convention-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .convention-header h3 {
+            flex: 1;
+            min-width: 250px;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .progress-display {
+            position: relative;
+            z-index: 1;
+            margin-bottom: var(--space-lg);
+        }
+
+        .progress-info {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            margin-bottom: var(--space-sm);
+            font-weight: 500;
+        }
+
+        .progress-bar-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin-bottom: var(--space-lg);
+        }
+
+        .progress-step {
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            transition: var(--transition-fast);
+        }
+
+        .progress-step.complete {
+            background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%);
+            border-color: var(--accent-emerald);
+            color: white;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .convention-checklist {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .convention-checklist ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .convention-checklist li {
+            padding: var(--space-sm) 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .convention-checklist li::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            flex-shrink: 0;
+            transition: var(--transition-fast);
+        }
+
+        .convention-checklist li.done::before {
+            background: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .convention-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SVG sprite for SF Symbols (reused) -->
+    <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="sf-home" viewBox="0 0 24 24">
+            <path d="M3 9.5l9-7 9 7V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" />
+        </symbol>
+        <symbol id="sf-plus" viewBox="0 0 24 24">
+            <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" />
+        </symbol>
+        <symbol id="sf-doc" viewBox="0 0 24 24">
+            <path d="M6 2h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" />
+            <path d="M14 2v6h6" />
+        </symbol>
+        <symbol id="sf-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" />
+            <path
+                d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95-6.95l-1.414 1.414M6.464 17.536l-1.414 1.414M17.536 17.536l1.414 1.414M6.464 6.464L5.05 5.05" />
+        </symbol>
+        <symbol id="sf-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </symbol>
+    </svg>
+    <!-- Accessibility skip link -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+    <!-- NoScript fallback -->
+    <noscript>
+        <div class="noscript-banner">
+            <p>JavaScript est requis pour que cette application fonctionne. Veuillez l'activer.</p>
+        </div>
+    </noscript>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="site-header">
+        <div class="header-inner neon-primary">
+            <div class="header-branding">
+                <h1 class="site-title">
+                    <svg class="icon-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    Gestion des Stages
+                </h1>
+                <p class="header-tagline">Suivi professionnel de vos stages en un seul endroit</p>
+            </div>
+
+            <nav class="site-nav" aria-label="Navigation principale">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Activer thème clair" onclick="toggleTheme()">
+                    <svg class="icon" width="20" height="20">
+                        <use xlink:href="#sf-moon" />
+                    </svg>
+                </button>
+                <button class="nav-toggle" aria-label="Basculer le menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-home" />
+                            </svg>
+                            Accueil
+                        </a></li>
+                    <li><a href="formulaire.html" class="nav-link">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-plus" />
+                            </svg>
+                            Ajouter un stage
+                        </a></li>
+                    <li><a href="conventions.html" class="nav-link active" aria-current="page">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-doc" />
+                            </svg>
+                            Conventions
+                        </a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content" class="main-container">
+
+        <div class="hero-section neon-primary">
+            <h2>Suivi des Conventions</h2>
+            <p>Visualisez l'avancement de chaque convention de stage et identifiez les étapes restantes.</p>
+        </div>
+
+        <!-- STATISTICS SECTION -->
+        <div class="stats-grid" id="stats-grid" role="region" aria-label="Statistiques des conventions">
+            <!-- Généré par JavaScript -->
+        </div>
+
+        <!-- CONVENTIONS LISTING SECTION -->
+        <section class="listings-section">
+            <div class="conventions-grid" id="conventions-list" role="region" aria-label="Liste des conventions">
+                <!-- Généré par JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer neon-primary">
+        <div class="footer-content">
+            <p>&copy; 2026 Gestion des Stages • <span class="version">v2.0</span></p>
+            <a href="index.html" class="btn btn-reset">Retour à l'accueil</a>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+    <!-- APPLICATION SCRIPTS -->
+    <script src="app.js"></script>
+    <script>
+        function renderConventions() {
+            const stages = getAllStages();
+            const container = document.getElementById('conventions-list');
+            const statsGrid = document.getElementById('stats-grid');
+
+            const total = stages.length;
+            const completed = stages.filter(s =>
+                s.convention.sent &&
+                s.convention.signedByCo &&
+                s.convention.signedByStudent &&
+                s.convention.signedByEstablishment
+            ).length;
+            const inProgress = stages.filter(s =>
+                (s.convention.sent || s.convention.signedByCo || s.convention.signedByStudent) &&
+                !s.convention.signedByEstablishment
+            ).length;
+            const notStarted = stages.filter(s =>
+                !s.convention.sent &&
+                !s.convention.signedByCo &&
+                !s.convention.signedByStudent &&
+                !s.convention.signedByEstablishment
+            ).length;
+
+            statsGrid.innerHTML = `
+                <div class="stat-card neon-primary">
+                    <p class="stat-number">${total}</p>
+                    <p class="stat-label">Stages totaux</p>
+                </div>
+                <div class="stat-card neon-primary">
+                    <p class="stat-number" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${completed}</p>
+                    <p class="stat-label">✓ Complètes</p>
+                </div>
+                <div class="stat-card neon-primary">
+                    <p class="stat-number" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${inProgress}</p>
+                    <p class="stat-label">⏳ En cours</p>
+                </div>
+                <div class="stat-card neon-primary">
+                    <p class="stat-number" style="color: var(--text-muted);">${notStarted}</p>
+                    <p class="stat-label">○ Non démarrées</p>
+                </div>
+            `;
+
+            if (stages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state neon-primary">
+                        <div class="empty-icon">📋</div>
+                        <h3>Aucune convention</h3>
+                        <p>Commencez par ajouter un stage pour démarrer le suivi des conventions.</p>
+                        <a href="formulaire.html" class="btn btn-primary neon-primary">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                            Ajouter un stage
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = stages.map(stage => {
+                const steps = [
+                    stage.convention.sent,
+                    stage.convention.signedByCo,
+                    stage.convention.signedByStudent,
+                    stage.convention.signedByEstablishment
+                ];
+                const completion = steps.filter(Boolean).length;
+                const status = completion === 4 ? 'Complète' : completion > 0 ? 'En cours' : 'Non démarrée';
+                const statusClass = completion === 4 ? 'positif' : completion > 0 ? 'attente' : 'négatif';
+
+                return `
+                    <article class="convention-card neon-primary">
+                        <div class="convention-header">
+                            <h3>${escapeHtml(stage.student)} — ${escapeHtml(stage.company)}</h3>
+                            <span class="stage-badge badge-${statusClass}">${status}</span>
+                        </div>
+                        
+                        <p class="convention-header" style="margin: 0 0 var(--space-lg); color: var(--text-tertiary); font-size: 0.9rem;">
+                            ${escapeHtml(stage.classroom)} • Avancement: <strong>${completion}/4</strong>
+                        </p>
+
+                        <div class="progress-display">
+                            <div class="progress-bar-container">
+                                <div class="progress-step ${steps[0] ? 'complete' : ''}">I</div>
+                                <div class="progress-step ${steps[1] ? 'complete' : ''}">II</div>
+                                <div class="progress-step ${steps[2] ? 'complete' : ''}">III</div>
+                                <div class="progress-step ${steps[3] ? 'complete' : ''}">IV</div>
+                            </div>
+                        </div>
+
+                        <div class="convention-checklist">
+                            <ul>
+                                <li class="${stage.convention.sent ? 'done' : 'pending'}">
+                                    <strong>I.</strong> Convention initiale envoyée
+                                </li>
+                                <li class="${stage.convention.signedByCo ? 'done' : 'pending'}">
+                                    <strong>II.</strong> Convention signée entreprise et tuteur
+                                </li>
+                                <li class="${stage.convention.signedByStudent ? 'done' : 'pending'}">
+                                    <strong>III.</strong> Convention signée étudiant et professeur
+                                </li>
+                                <li class="${stage.convention.signedByEstablishment ? 'done' : 'pending'}">
+                                    <strong>IV.</strong> Convention signée par établissement
+                                </li>
+                            </ul>
+                        </div>
+
+                        <a href="formulaire.html?id=${stage.id}" class="btn btn-primary neon-primary" style="margin-top: var(--space-lg);">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
+                            Mettre à jour
+                        </a>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderConventions();
+            setActiveNav();
+        });
+    </script>
+</body>
+
+</html>

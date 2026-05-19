@@ -1,0 +1,40 @@
+[
+    {
+        "student_name": "Dupont Martin",
+        "classroom": "SIO1 - 2026",
+        "company_name": "Société Ex.",
+        "email": "contact@ex.com",
+        "phone": "+33 1 23 45 67 89",
+        "address": "12 rue Exemple, 75000 Paris",
+        "contact_mode": "email",
+        "contact_date": "2026-02-10",
+        "status": "positif",
+        "reminder_date": "2026-02-17",
+        "reminder_mode": "email",
+        "contact_person": "Mme Dupont - Responsable RH",
+        "notes": "Entreprise intéressée, stage confirmé",
+        "convention_sent": true,
+        "signed_by_company": true,
+        "signed_by_student": true,
+        "signed_by_school": false
+    },
+    {
+        "student_name": "Leclerc Julie",
+        "classroom": "SIO1 - 2026",
+        "company_name": "Atelier Demo",
+        "email": "info@atelierdemo.fr",
+        "phone": "",
+        "address": "",
+        "contact_mode": "email",
+        "contact_date": null,
+        "status": "attente",
+        "reminder_date": null,
+        "reminder_mode": null,
+        "contact_person": "",
+        "notes": "Pas encore contactée",
+        "convention_sent": false,
+        "signed_by_company": false,
+        "signed_by_student": false,
+        "signed_by_school": false
+    }
+]

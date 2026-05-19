@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Plateforme moderna de suivi des stages avec interface glassmorphism Apple VisionOS.">
+    <meta name="theme-color" content="#0f0f1e">
+    <title>Gestion des Stages</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>✨</text></svg>">
+    <link rel="stylesheet" href="style-unified.css">
+    <script src="supabase-config.js"></script>
+</head>
+
+<body>
+    <!-- SVG sprite for SF Symbols (minimal subset) -->
+    <svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="sf-home" viewBox="0 0 24 24">
+            <path d="M3 9.5l9-7 9 7V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" />
+        </symbol>
+        <symbol id="sf-plus" viewBox="0 0 24 24">
+            <path d="M12 5v14m-7-7h14" stroke-width="2" stroke-linecap="round" />
+        </symbol>
+        <symbol id="sf-doc" viewBox="0 0 24 24">
+            <path d="M6 2h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" />
+            <path d="M14 2v6h6" />
+        </symbol>
+        <symbol id="sf-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" />
+            <path
+                d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95-6.95l-1.414 1.414M6.464 17.536l-1.414 1.414M17.536 17.536l1.414 1.414M6.464 6.464L5.05 5.05" />
+        </symbol>
+        <symbol id="sf-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </symbol>
+    </svg>
+    <header class="site-header">
+        <div class="header-inner neon-primary">
+            <div class="header-branding">
+                <h1 class="site-title">
+                    <svg class="icon-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    Gestion des stages
+                </h1>
+                <p class="header-tagline">
+                    Suivi professionnel de vos stages en un seul endroit
+                </p>
+            </div>
+
+            <nav class="site-nav" aria-label="Navigation principale">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Activer thème clair" onclick="toggleTheme()">
+                    <svg class="icon" width="20" height="20">
+                        <use xlink:href="#sf-moon" />
+                    </svg>
+                </button>
+                <button class="nav-toggle" aria-label="Basculer le menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-menu">
+                    <li>
+                        <a href="index.html" class="nav-link active" aria-current="page">
+                            <svg class="icon" width="20" height="20">
+                                <use xlink:href="#sf-home" />
+                            </svg>
+                            Accueil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="formulaire.html" class="nav-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                            </svg>
+                            Ajouter un stage
+                        </a>
+                    </li>
+                    <li>
+                        <a href="conventions.html" class="nav-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-8-6z" />
+                            </svg>
+                            Conventions
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main id="main-content" class="main-container">
+
+        <section class="stats-section">
+            <div class="stats-grid" id="stats-grid" role="region" aria-label="Statistiques des stages">
+            </div>
+        </section>
+
+        <section class="hero-section neon-primary">
+            <div class="glass-box glass-lg neon-primary">
+                <div class="glass-content">
+                    <h2>
+                        Bienvenue
+                    </h2>
+                    <p>
+                        Gérez facilement vos stages, suivez les contacts avec les entreprises et les conventions en un
+                        seul endroit centralisé et sécurisé.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="search-filters-section">
+            <div class="search-filters-wrapper">
+                <form class="search-form" role="search">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="search" id="search-input" class="search-input"
+                            placeholder="Rechercher par étudiant, entreprise, tuteur, classe..."
+                            aria-label="Rechercher un stage">
+                    </div>
+                </form>
+
+                <div class="filters-toolbar">
+                    <div class="filter-buttons" role="group" aria-label="Filtrer par statut">
+                        <button class="filter-btn active" data-filter="all">
+                            <span class="filter-icon">
+                                📋
+                            </span>
+                            Tous
+                        </button>
+                        <button class="filter-btn" data-filter="positif">
+                            <span class="filter-icon">
+                                ✓
+                            </span>
+                            Positifs
+                        </button>
+                        <button class="filter-btn" data-filter="attente">
+                            <span class="filter-icon">
+                                ⏳
+                            </span>
+                            En attente
+                        </button>
+                        <button class="filter-btn" data-filter="negatif">
+                            <span class="filter-icon">
+                                ✗
+                            </span>
+                            Négatifs
+                        </button>
+                    </div>
+
+                    <div class="sort-wrapper">
+                        <label for="sort-select" class="sort-label">
+                            Trier par :
+                        </label>
+                        <select id="sort-select" class="sort-select">
+                            <option value="student">
+                                Étudiant
+                            </option>
+                            <option value="company">
+                                Entreprise
+                            </option>
+                            <option value="contactDate">
+                                Date de contact
+                            </option>
+                            <option value="classroom">
+                                Classe
+                            </option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-export" onclick="exportToCSV()" aria-label="Exporter en CSV">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Exporter CSV
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="listings-section">
+            <div class="section-header">
+                <h2>
+                    Stages en cours
+                </h2>
+                <p class="count-badge" id="count-info" aria-live="polite" aria-atomic="true">
+                    Aucun chargé
+                </p>
+            </div>
+
+            <div id="stages-list" class="stages-list" role="region" aria-label="Liste des stages">
+            </div>
+
+            <div id="no-results" class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                    📭
+                </div>
+                <h3>
+                    Aucun stage trouvé
+                </h3>
+                <p>
+                    Commencez par ajouter votre premier stage à suivre.
+                </p>
+                <a href="formulaire.html" class="btn btn-primary neon-primary">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </svg>
+                    Ajouter un stage
+                </a>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="glass-box glass-lg neon-primary">
+                <h2>
+                    Points forts de l'application
+                </h2>
+                <ul class="features-list">
+                    <li>
+                        <span class="feature-icon">
+                            📇
+                        </span>
+                        <span>
+                            Suivi complet des contacts entreprises avec historique
+                        </span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            📄
+                        </span>
+                        <span>
+                            Gestion des conventions de stage et statuts de signature
+                        </span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            🔍
+                        </span>
+                        <span>
+                            Recherche et filtrage dynamiques en temps réel
+                        </span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            📱
+                        </span>
+                        <span>
+                            Interface moderne, responsive et très accessible
+                        </span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">
+                            💾
+                        </span>
+                        <span>
+                            Sauvegarde automatique des données en local
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer neon-primary">
+        <div class="footer-content">
+            <p>
+                &copy; 2026 Gestion des Stages •
+                <span class="version">
+                    v2.0
+                </span>
+            </p>
+            <button class="btn-reset" onclick="if(confirm('Supprimer tous les stages ?')) { clearAllData(); }">
+                Réinitialiser les données
+            </button>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+    <script src="supabase-client.js"></script>
+    <script src="storage-adapter.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // ====== Stats & filtres (async, compatibles StorageAdapter) ======
+
+        async function renderStats() {
+            const stages = await getAllStages();
+            const statsGrid = document.getElementById('stats-grid');
+            if (!statsGrid) return;
+
+            const total = stages.length;
+            const positifs = stages.filter(s => s.response === 'positif').length;
+            const attentes = stages.filter(s => s.response === 'attente').length;
+            const negatifs = stages.filter(s => s.response === 'negatif').length;
+
+            statsGrid.innerHTML = `
+                <div class="stat-card neon-primary">
+                    <p class="stat-number">${total}</p>
+                    <p class="stat-label">📋 Total stages</p>
+                </div>
+                <div class="stat-card neon-primary">
+                    <p class="stat-number" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${positifs}</p>
+                    <p class="stat-label">✓ Positifs</p>
+                </div>
+                <div class="stat-card neon-primary">
+                    <p class="stat-number" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${attentes}</p>
+                    <p class="stat-label">⏳ En attente</p>
+                </div>
+                <div class="stat-card neon-primary">
+                    <p class="stat-number" style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${negatifs}</p>
+                    <p class="stat-label">✗ Négatifs</p>
+                </div>
+            `;
+        }
+
+        let currentFilter = 'all';
+        let currentSort = 'student';
+
+        async function filterAndSortStages() {
+            const searchInput = document.getElementById('search-input');
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
+            const allStages = await getAllStages();
+
+            let filtered = allStages.filter(stage => {
+                const matchesText = stage.student.toLowerCase().includes(query) ||
+                    stage.company.toLowerCase().includes(query) ||
+                    stage.classroom.toLowerCase().includes(query) ||
+                    (stage.contactPerson && stage.contactPerson.toLowerCase().includes(query)) ||
+                    (stage.contact && stage.contact.toLowerCase().includes(query));
+                const matchesFilter = currentFilter === 'all' || stage.response === currentFilter;
+                return matchesText && matchesFilter;
+            });
+
+            filtered.sort((a, b) => {
+                let valA = a[currentSort] || '';
+                let valB = b[currentSort] || '';
+                if (currentSort === 'contactDate') {
+                    valA = valA ? new Date(valA) : new Date(0);
+                    valB = valB ? new Date(valB) : new Date(0);
+                    return valB - valA;
+                }
+                if (typeof valA === 'string') return valA.localeCompare(valB);
+                return 0;
+            });
+
+            await window.renderStages(filtered);
+        }
+
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    filterAndSortStages();
+                });
+            });
+
+            const sortSelect = document.getElementById('sort-select');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', () => {
+                    currentSort = sortSelect.value;
+                    filterAndSortStages();
+                });
+            }
+
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', filterAndSortStages);
+            }
+        }
+
+        // Surcharge deleteStage pour rafraîchir les stats
+        const _origDelete = window.deleteStage;
+        window.deleteStage = async function(id) {
+            await _origDelete(id);
+            await renderStats();
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderStats();
+            setupFilters();
+        });
+    </script>
+</body>
+
+</html>
