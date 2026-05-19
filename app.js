@@ -85,6 +85,9 @@ async function addStage(stage) {
     try {
         await fetch("https://script.google.com/macros/s/AKfycbzX9Oo0vSYV7i8fmEpY1z2ZNt4Kwsh7IVGrhg_2c4D3tPYGVOcMV9-Qbp2mwkfPNzIP/exec", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 student_name: stage.student,
                 classroom: stage.classroom,
@@ -99,10 +102,12 @@ async function addStage(stage) {
                 reminder_mode: stage.remindMode || null,
                 contact_person: stage.contactPerson,
                 notes: stage.notes,
-                convention_sent: stage.convention.sent,
-                signed_by_company: stage.convention.signedByCo,
-                signed_by_student: stage.convention.signedByStudent,
-                signed_by_school: stage.convention.signedByEstablishment
+
+                // ✅ CORRECTION IMPORTANTE
+                convention_sent: stage.convention?.sent ?? false,
+                signed_by_company: stage.convention?.signedByCo ?? false,
+                signed_by_student: stage.convention?.signedByStudent ?? false,
+                signed_by_school: stage.convention?.signedByEstablishment ?? false
             })
         });
 
