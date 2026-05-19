@@ -83,40 +83,20 @@ async function saveStages(stages) {
 
 async function addStage(stage) {
     try {
-        await fetch("https://script.google.com/macros/s/AKfycbzX9Oo0vSYV7i8fmEpY1z2ZNt4Kwsh7IVGrhg_2c4D3tPYGVOcMV9-Qbp2mwkfPNzIP/exec", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                student_name: stage.student,
-                classroom: stage.classroom,
-                company_name: stage.company,
-                email: stage.contact,
-                phone: stage.phone,
-                address: stage.address,
-                contact_mode: stage.contactMode,
-                contact_date: stage.contactDate || null,
-                status: stage.response,
-                reminder_date: stage.remindDate || null,
-                reminder_mode: stage.remindMode || null,
-                contact_person: stage.contactPerson,
-                notes: stage.notes,
-
-                // ✅ CORRECTION IMPORTANTE
-                convention_sent: stage.convention?.sent ?? false,
-                signed_by_company: stage.convention?.signedByCo ?? false,
-                signed_by_student: stage.convention?.signedByStudent ?? false,
-                signed_by_school: stage.convention?.signedByEstablishment ?? false
-            })
-        });
-
-        showToast("✅ Stage enregistré dans Google Sheets !", "success");
-
+        if (window.StorageAdapter) {
+            await window.StorageAdapter.addStage(stage);
+        } else {
+            // Fallback si l'adaptateur ne répond pas
+            const stages = JSON.parse(localStorage.getItem('stages_data') || '[]');
+            stage.id = Math.max(...stages.map(s => s.id), 0) + 1;
+            stages.push(stage);
+            localStorage.setItem('stages_data', JSON.stringify(stages));
+        }
+        showToast("✅ Stage enregistré !", "success");
         return stage;
     } catch (err) {
         console.error(err);
-        showToast("❌ Erreur envoi Google Sheets", "error");
+        showToast("❌ Erreur lors de l'enregistrement", "error");
     }
 }
 
