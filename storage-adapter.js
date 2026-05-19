@@ -78,7 +78,7 @@
         async clearAllData() {
             if (this.isRemote) {
                 // caution: this will delete all rows from stages
-                await window.SupabaseService.client.from('stages').delete().neq('id', 0).catch(() => { });
+                await window.SupabaseService.client.from('stage').delete().neq('id', 0).catch(() => { });
                 return;
             }
             localStorage.removeItem(STORAGE_KEY);

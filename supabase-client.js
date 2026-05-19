@@ -17,33 +17,32 @@
             }
         },
         async getAllStages() {
-            const { data, error } = await this.client.from('stages').select('*').order('id', { ascending: true });
+            const { data, error } = await this.client.from('stage').select('*').order('id', { ascending: true });
             if (error) throw error;
             return data.map(normalizeRowToStage);
         },
         async addStage(stage) {
             const row = stageToRow(stage);
-            const { data, error } = await this.client.from('stages').insert([row]).select('*');
+            const { data, error } = await this.client.from('stage').insert([row]).select('*');
             if (error) throw error;
             return normalizeRowToStage(data[0]);
         },
         async updateStage(id, updates) {
             const row = stageToRow(updates);
-            const { data, error } = await this.client.from('stages').update(row).eq('id', id).select('*');
+            const { data, error } = await this.client.from('stage').update(row).eq('id', id).select('*');
             if (error) throw error;
             return normalizeRowToStage(data[0]);
         },
         async deleteStage(id) {
-            const { error } = await this.client.from('stages').delete().eq('id', id);
+            const { error } = await this.client.from('stage').delete().eq('id', id);
             if (error) throw error;
             return true;
         },
         // Migrate localStorage data into remote DB (idempotent insert on empty table)
         async migrateLocalToRemote(localStages) {
             if (!Array.isArray(localStages) || localStages.length === 0) return { inserted: 0 };
-            // Remove local ids to let DB assign new ones
             const rows = localStages.map(s => stageToRow(s, { keepId: false }));
-            const { data, error } = await this.client.from('stages').insert(rows).select('id');
+            const { data, error } = await this.client.from('stage').insert(rows).select('id');
             if (error) throw error;
             return { inserted: data.length };
         }
@@ -52,23 +51,23 @@
     function stageToRow(s, opts = {}) {
         const keepId = opts.keepId || false;
         const row = {
-            student: s.student || null,
+            student_name: s.student || null,
             classroom: s.classroom || null,
-            company: s.company || null,
-            contact: s.contact || null,
+            company_name: s.company || null,
+            email: s.contact || null,
             phone: s.phone || null,
             address: s.address || null,
             contact_mode: s.contactMode || null,
             contact_date: s.contactDate || null,
-            response: s.response || null,
-            remind_date: s.remindDate || null,
-            remind_mode: s.remindMode || null,
+            status: s.response || null,
+            reminder_date: s.remindDate || null,
+            reminder_mode: s.remindMode || null,
             contact_person: s.contactPerson || null,
             notes: s.notes || null,
             convention_sent: s.convention ? !!s.convention.sent : false,
-            convention_signed_by_co: s.convention ? !!s.convention.signedByCo : false,
-            convention_signed_by_student: s.convention ? !!s.convention.signedByStudent : false,
-            convention_signed_by_establishment: s.convention ? !!s.convention.signedByEstablishment : false
+            signed_by_company: s.convention ? !!s.convention.signedByCo : false,
+            signed_by_student: s.convention ? !!s.convention.signedByStudent : false,
+            signed_by_school: s.convention ? !!s.convention.signedByEstablishment : false
         };
         if (keepId && s.id) row.id = s.id;
         return row;
@@ -77,27 +76,25 @@
     function normalizeRowToStage(r) {
         return {
             id: r.id,
-            student: r.student,
-            classroom: r.classroom,
-            company: r.company,
-            contact: r.contact,
-            phone: r.phone,
-            address: r.address,
-            contactMode: r.contact_mode,
-            contactDate: r.contact_date ? r.contact_date : '',
-            response: r.response,
-            remindDate: r.remind_date ? r.remind_date : '',
-            remindMode: r.remind_mode,
-            contactPerson: r.contact_person,
-            notes: r.notes,
+            student: r.student_name || '',
+            classroom: r.classroom || '',
+            company: r.company_name || '',
+            contact: r.email || '',
+            phone: r.phone || '',
+            address: r.address || '',
+            contactMode: r.contact_mode || '',
+            contactDate: r.contact_date || '',
+            response: r.status || '',
+            remindDate: r.reminder_date || '',
+            remindMode: r.reminder_mode || '',
+            contactPerson: r.contact_person || '',
+            notes: r.notes || '',
             convention: {
                 sent: !!r.convention_sent,
-                signedByCo: !!r.convention_signed_by_co,
-                signedByStudent: !!r.convention_signed_by_student,
-                signedByEstablishment: !!r.convention_signed_by_establishment
-            },
-            created_at: r.created_at,
-            updated_at: r.updated_at
+                signedByCo: !!r.signed_by_company,
+                signedByStudent: !!r.signed_by_student,
+                signedByEstablishment: !!r.signed_by_school
+            }
         };
     }
 
